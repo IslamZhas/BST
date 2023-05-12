@@ -6,9 +6,11 @@ public class BST<K extends Comparable<K>, V> {
         private K key;
         private V value;
         private Node left, right;
-        public Node(K key, V value){
+        int size;
+        public Node(K key, V value, int size){
             this.key = key;
             this.value = value;
+            this.size = size;
         }
     }
     private Node min(Node node){
@@ -21,10 +23,10 @@ public class BST<K extends Comparable<K>, V> {
     }
     public int getSize(Node node){
         if(node == null) return 0;
-        else return getSize(node.left) + getSize(node.right) + 1;
+        else return node.size + 1;
     }
     public void put(K key, V value){
-        Node node = new Node(key,value);
+        Node node = new Node(key,value, 1);
 
         if(root == null) root = node;
         Node parent;
@@ -49,6 +51,7 @@ public class BST<K extends Comparable<K>, V> {
                 }
             }
             else current.value = value; return;
+            current.size = getSize(current.left) + getSize(current.right) + 1;
 
         }
     }
