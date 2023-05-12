@@ -27,17 +27,26 @@ public class BST<K extends Comparable<K>, V> {
         Node node = new Node(key,value);
 
         if(root == null) root = node;
-
+        Node parent;
         Node current = root;
 
         while(root != null){
+            parent = current;
             int compare = key.compareTo(current.key);
 
             if(compare < 0){
                 current = current.left;
+                if(current.left == null){
+                    parent.left = node;
+                    return;
+                }
             }
             else if(compare > 0){
                 current = current.right;
+                if(current.right == null){
+                    parent.right = node;
+                    return;
+                }
             }
             else current.value = value; return;
 
@@ -55,22 +64,35 @@ public class BST<K extends Comparable<K>, V> {
     }
 
 
-    public void delete(K key){}
-    public Iterable<K> iterator(){
-        return new MyIterator(root);
+    public void delete(K key){
+        Node current = root;
+        if(current.key != null) return;
     }
-    private class MyIterator implements Iterable<K>{
+    public Iterable<K> iterator(){
+        return (Iterable<K>) new MyIterator(root);
+    }
+    private class MyIterator implements Iterator<K>{
         private Node next;
         public MyIterator(Node root){
             next = root;
             if(next == null) return;
             while(next.left != null) next = next.left;
         }
+        public boolean hasNext(){
+            return next != null;
+        }
 
         @Override
-        public Iterator<K> iterator() {
-            return null;
+        public K next() {
+            Node current = next;
+            K key = current.key;
+
+            if(current.right != null) current = current.right;
+
+            next = current;
+            return key;
         }
+
         public void inOrder(Node root){
             if (root == null) return;
             inOrder(root.left);
