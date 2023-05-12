@@ -24,11 +24,23 @@ public class BST<K extends Comparable<K>, V> {
         else return getSize(node.left) + getSize(node.right) + 1;
     }
     public void put(K key, V value){
-        Node node = root;
-        while(node != null){
-            int compare = key.compareTo(node.key);
-            if(compare < 0) node = node.left;
-            else if(compare > 0) node = node.right;
+        Node node = new Node(key,value);
+
+        if(root == null) root = node;
+
+        Node current = root;
+
+        while(root != null){
+            int compare = key.compareTo(current.key);
+
+            if(compare < 0){
+                current = current.left;
+            }
+            else if(compare > 0){
+                current = current.right;
+            }
+            else current.value = value; return;
+
         }
     }
     public V get(K key){
