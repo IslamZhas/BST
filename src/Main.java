@@ -8,9 +8,21 @@ public class Main {
         tree.put(5, "E");
         tree.put(6, "F");
 
-        for (var elem : tree) {
-            System.out.println("key is " + elem.key + " and value is " + elem.value);
+        for (Integer key : tree) {
+            String value = tree.get(key);
+            System.out.println("Key is " + key + " and value is " + value);
         }
+        System.out.println();
 
+
+
+        /*
+        tree.delete(3);
+        tree.delete(6);
+        for (Integer key : tree) {
+            String value = tree.get(key);
+            System.out.println("Key is " + key + " and value is " + value);
+        }
+         */
     }
 }

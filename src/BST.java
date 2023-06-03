@@ -25,35 +25,27 @@ public class BST<K extends Comparable<K>, V> {
         if(node == null) return 0;
         else return node.size + 1;
     }
-    public void put(K key, V value){
-        Node node = new Node(key,value, 1);
+    public void put(K key, V value) {
+        root = putNode(root, key, value);
+    }
 
-        if(root == null) root = node;
-        Node parent;
-        Node current = root;
-
-        while(root != null){
-            parent = current;
-            int compare = key.compareTo(current.key);
-
-            if(compare < 0){
-                current = current.left;
-                if(current.left == null){
-                    parent.left = node;
-                    return;
-                }
-            }
-            else if(compare > 0){
-                current = current.right;
-                if(current.right == null){
-                    parent.right = node;
-                    return;
-                }
-            }
-            else current.value = value; return;
-            current.size = getSize(current.left) + getSize(current.right) + 1;
-
+    private Node putNode(Node node, K key, V value) {
+        if (node == null) {
+            return new Node(key, value, 1);
         }
+
+        int compare = key.compareTo(node.key);
+
+        if (compare < 0) {
+            node.left = putNode(node.left, key, value);
+        } else if (compare > 0) {
+            node.right = putNode(node.right, key, value);
+        } else {
+            node.value = value; 
+        }
+
+        node.size = getSize(node.left) + getSize(node.right) + 1;
+        return node;
     }
     public V get(K key){
         Node node = root;
@@ -67,12 +59,39 @@ public class BST<K extends Comparable<K>, V> {
     }
 
 
-    public void delete(K key){
-        Node current = root;
-        if(current.key != null) return;
+    public void delete(K key) {
+        root = deleteNode(root, key);
     }
-    public Iterable<K> iterator(){
-        return (Iterable<K>) new MyIterator(root);
+
+    private Node deleteNode(Node node, K key) {
+        if (node == null) {
+            return null;
+        }
+
+        int compare = key.compareTo(node.key);
+
+        if (compare < 0) {
+            node.left = deleteNode(node.left, key);
+        } else if (compare > 0) {
+            node.right = deleteNode(node.right, key);
+        } else {
+            if (node.left == null) {
+                return node.right;
+            } else if (node.right == null) {
+                return node.left;
+            }
+
+            Node mini = min(node.right);
+            node.key = mini.key;
+            node.value = mini.value;
+            node.right = deleteNode(node.right, mini.key);
+        }
+
+        node.size = getSize(node.left) + getSize(node.right) + 1;
+        return node;
+    }
+    public Iterator<K> iterator(){
+        return new MyIterator(root);
     }
     private class MyIterator implements Iterator<K>{
         private Node next;
